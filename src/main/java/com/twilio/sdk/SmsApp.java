@@ -6,20 +6,26 @@ import com.twilio.twiml.messaging.Message;
 
 import static spark.Spark.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SmsApp {
+
+    private static Logger logger = LoggerFactory.getLogger(SmsApp.class);
     public static void main(String[] args) {
         get("/", (req, res) -> {
-            System.out.println("Get request detected");
+            logger.info("Get request received");
             return res.status();
         });
-        post("/sms", (req, res) -> {
-            System.out.println("Post request initiated");
+        post("/sms", (req, res) -> {    
+            logger.info("Post request received");
             res.type("application/xml");
-            
-            if (req.body().equals("ping")) {
-                return msgToTwiml("pong");
+
+            System.out.println(req.queryParams("Body"));
+            if (req.queryParams("Body").equals("ping")) {
+                return msgToTwiml("Pong!");
             }
-            return msgToTwiml("Try something else");
+            else return msgToTwiml("Try something else.");
         });
     }
 
